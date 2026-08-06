@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Empanadas Conucos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+
+  :root {
+    --azul: #1e3a5f;
+    --azul-oscuro: #14293f;
+    --naranja: #e0763a;
+    --naranja-claro: #f2955c;
+    --crema: #faf5ee;
+    --verde-whatsapp: #25d366;
+    --texto: #2c3e50;
+    --gris: #8a94a3;
+  }
+
+  body {
+    font-family: "Nunito", sans-serif;
+    background: linear-gradient(180deg, var(--azul-oscuro), #0d1b2a 340px, #e9ecf1 340px);
+    color: var(--texto);
+    min-height: 100vh;
+    margin: 0;
+    padding: 24px 12px;
+  }
+
+  .app-shell {
+    max-width: 460px;
+    margin: 0 auto;
+    background: var(--crema);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+  }
+
+  header {
+    position: relative;
+    background: url('{{ url_for("static", filename="hero-empanadas.jpg") }}') center/cover no-repeat;
+    color: white;
+    padding: 28px 20px 24px;
+    text-align: center;
+    overflow: hidden;
+  }
+  header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(165deg, rgba(20, 41, 63, 0.9), rgba(30, 58, 95, 0.78));
+  }
+  header .contenido { position: relative; z-index: 1; }
+  header .logo-img {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  }
+  header h1 {
+    margin: 6px 0 2px;
+    font-family: "Poppins", sans-serif;
+    font-weight: 700;
+    font-size: 1.5em;
+    letter-spacing: 0.5px;
+  }
+  header p {
+    margin: 0;
+    font-size: 0.75em;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--naranja-claro);
+    font-weight: 600;
+  }
+
+  main { padding: 20px 18px 24px; }
+
+  section { display: none; animation: aparecer 0.25s ease; }
+  section.activa { display: block; }
+  @keyframes aparecer {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h2 {
+    font-family: "Poppins", sans-serif;
+    font-size: 1.1em;
+    color: var(--azul);
+    margin: 4px 0 14px;
+  }
+
+  p.intro { color: var(--gris); font-size: 0.92em; margin-top: 0; }
+
+  .btn {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--naranja-claro), var(--naranja));
+    color: white;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 0.95em;
+    cursor: pointer;
+    margin: 8px 0;
+    text-align: center;
+    text-decoration: none;
+    box-shadow: 0 6px 16px rgba(224, 118, 58, 0.35);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, opacity 0.12s ease;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled {
+    background: #d8d2c8;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  .btn-whatsapp {
+    background: linear-gradient(135deg, #2fe27a, var(--verde-whatsapp));
+    box-shadow: 0 6px 16px rgba(37, 211, 102, 0.35);
+  }
+
+  .separador {
+    text-align: center;
+    color: var(--gris);
+    font-size: 0.8em;
+    margin: 18px 0 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .separador::before, .separador::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #e0dcd2;
+  }
+
+  .tarjeta-sede {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    border-radius: 12px;
+    padding: 14px;
+    margin: 8px 0;
+    border: 1px solid #ece7dc;
+    cursor: pointer;
+    transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .tarjeta-sede:hover {
+    border-color: var(--naranja);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(30, 58, 95, 0.1);
+  }
+  .tarjeta-sede .pin {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: #fdece1;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1em;
+    flex-shrink: 0;
+  }
+  .tarjeta-sede .info { flex: 1; }
+  .tarjeta-sede .nombre { font-weight: 700; font-size: 0.95em; color: var(--azul); }
+  .tarjeta-sede .direccion { font-size: 0.8em; color: var(--gris); }
+  .tarjeta-sede .flecha { color: var(--naranja); font-size: 1.1em; }
+
+  .volver {
+    background: none;
+    border: none;
+    color: var(--azul);
+    font-weight: 600;
+    font-size: 0.85em;
+    cursor: pointer;
+    padding: 4px 0 14px;
+    display: block;
+  }
+
+  .categoria-titulo {
+    background: var(--azul);
+    color: white;
+    padding: 7px 14px;
+    border-radius: 999px;
+    margin: 18px 0 8px;
+    font-family: "Poppins", sans-serif;
+    font-size: 0.8em;
+    font-weight: 600;
+    display: inline-block;
+  }
+
+  .producto {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    border: 1px solid #ece7dc;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .producto.en-carrito { border-color: var(--naranja); background: #fffaf5; }
+  .producto-info { flex: 1; padding-right: 8px; }
+  .producto-nombre { font-weight: 700; font-size: 0.92em; color: var(--texto); }
+  .producto-desc { font-size: 0.76em; color: var(--gris); margin-top: 1px; }
+  .producto-precio { font-size: 0.8em; color: var(--naranja); font-weight: 600; margin-top: 3px; }
+
+  .stepper { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .stepper button {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: none;
+    background: var(--azul);
+    color: white;
+    font-size: 1.1em;
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 0.1s ease;
+  }
+  .stepper button:active { transform: scale(0.9); }
+  .stepper span { font-weight: 700; min-width: 16px; text-align: center; }
+
+  #resumen-carrito {
+    position: sticky;
+    bottom: 0;
+    background: white;
+    border-top: 1px solid #ece7dc;
+    padding: 14px 4px 4px;
+    margin-top: 18px;
+    box-shadow: 0 -8px 20px rgba(0, 0, 0, 0.06);
+  }
+  #resumen-carrito p {
+    margin: 0 0 6px;
+    font-size: 0.72em;
+    color: var(--gris);
+  }
+  #total-carrito {
+    display: block;
+    font-family: "Poppins", sans-serif;
+    font-size: 1.1em;
+    color: var(--azul);
+    margin-bottom: 8px;
+  }
+
+  label { display: block; margin: 12px 0 4px; font-size: 0.85em; font-weight: 600; color: var(--azul); }
+  input, select, textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd6c8;
+    font-size: 0.95em;
+    font-family: inherit;
+    background: white;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--naranja);
+  }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <header>
+    <div class="contenido">
+      <img class="logo-img" src="{{ url_for('static', filename='logo.jpg') }}" alt="Logo Empanadas Conucos">
+      <h1>Empanadas Conucos</h1>
+      <p>Ricas y auténticas</p>
+    </div>
+  </header>
+
+  <main>
+
+    <section id="seccion-inicio" class="activa">
+      <p class="intro">Para hacer tu pedido, primero encontremos la sede más cercana a ti.</p>
+      <button class="btn" id="btn-ubicacion">📍 Usar mi ubicación</button>
+      <div class="separador">o elige tu sede manualmente</div>
+      <div id="lista-sedes"></div>
+    </section>
+
+    <section id="seccion-llamar">
+      <button class="volver" onclick="volverInicio()">← Elegir otra sede</button>
+      <h2 id="llamar-nombre-sede"></h2>
+      <p class="intro" id="llamar-direccion"></p>
+      <p class="intro">Esta sede todavía no tiene WhatsApp. Puedes llamar directamente para hacer tu pedido:</p>
+      <a class="btn" id="llamar-boton" href="#">📞 Llamar a la sede</a>
+    </section>
+
+    <section id="seccion-carrito">
+      <button class="volver" onclick="volverInicio()">← Elegir otra sede</button>
+      <h2 id="carrito-nombre-sede"></h2>
+      <div id="catalogo"></div>
+
+      <div id="resumen-carrito">
+        <p>No incluye domicilio, el valor te lo confirma un empleado</p>
+        <strong id="total-carrito">Total: $0</strong>
+        <button class="btn" id="btn-continuar" disabled>Continuar</button>
+      </div>
+    </section>
+
+    <section id="seccion-checkout">
+      <button class="volver" onclick="mostrarSeccion('seccion-carrito')">← Volver al carrito</button>
+      <h2>Completa tus datos</h2>
+      <label for="input-nombre">Nombre</label>
+      <input id="input-nombre" required>
+      <label for="input-telefono">Teléfono</label>
+      <input id="input-telefono" type="tel" required>
+      <label for="input-direccion">Dirección de entrega</label>
+      <input id="input-direccion" required>
+      <label for="input-pago">Método de pago</label>
+      <select id="input-pago">
+        <option>Efectivo</option>
+        <option>Transferencia</option>
+      </select>
+      <label for="input-observaciones">Observaciones (opcional)</label>
+      <textarea id="input-observaciones" rows="2"></textarea>
+      <button class="btn btn-whatsapp" id="btn-enviar-whatsapp">💬 Enviar pedido por WhatsApp</button>
+    </section>
+
+  </main>
+
+</div>
+
+<script>
+  const SEDES = {{ sedes | tojson }};
+  const CATALOGO = {{ catalogo | tojson }};
+
+  let sedeActual = null;
+  const carrito = {};
+
+  function formatoCOP(valor) {
+    return "$" + valor.toLocaleString("es-CO");
+  }
+
+  function mostrarSeccion(id) {
+    document.querySelectorAll("section").forEach((s) => s.classList.remove("activa"));
+    document.getElementById(id).classList.add("activa");
+  }
+
+  function volverInicio() {
+    sedeActual = null;
+    mostrarSeccion("seccion-inicio");
+  }
+
+  function distanciaKm(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }
+
+  function sedeMasCercana(lat, lng) {
+    return SEDES.reduce((mejor, sede) => {
+      const d = distanciaKm(lat, lng, sede.lat, sede.lng);
+      return !mejor || d < mejor.distancia ? { ...sede, distancia: d } : mejor;
+    }, null);
+  }
+
+  function renderizarListaSedes() {
+    const contenedor = document.getElementById("lista-sedes");
+    contenedor.innerHTML = "";
+    SEDES.forEach((sede) => {
+      const div = document.createElement("div");
+      div.className = "tarjeta-sede";
+      div.innerHTML = `
+        <div class="pin">📍</div>
+        <div class="info">
+          <div class="nombre">${sede.nombre}</div>
+          <div class="direccion">${sede.direccion}</div>
+        </div>
+        <div class="flecha">›</div>
+      `;
+      div.addEventListener("click", () => seleccionarSede(sede));
+      contenedor.appendChild(div);
+    });
+  }
+
+  function seleccionarSede(sede) {
+    sedeActual = sede;
+    if (sede.whatsapp) {
+      mostrarCarrito(sede);
+    } else {
+      document.getElementById("llamar-nombre-sede").textContent = sede.nombre;
+      document.getElementById("llamar-direccion").textContent = sede.direccion;
+      document.getElementById("llamar-boton").href = "tel:" + sede.telefono.replace(/[^0-9+]/g, "");
+      mostrarSeccion("seccion-llamar");
+    }
+  }
+
+  function mostrarCarrito(sede) {
+    document.getElementById("carrito-nombre-sede").textContent = `Pedido para ${sede.nombre}`;
+    const contenedor = document.getElementById("catalogo");
+    contenedor.innerHTML = "";
+
+    let categoriaActual = null;
+    CATALOGO.forEach((item) => {
+      if (item.categoria !== categoriaActual) {
+        categoriaActual = item.categoria;
+        const titulo = document.createElement("div");
+        titulo.className = "categoria-titulo";
+        titulo.textContent = categoriaActual;
+        contenedor.appendChild(titulo);
+      }
+
+      const div = document.createElement("div");
+      div.className = "producto";
+      div.id = "producto-" + item.id;
+      div.innerHTML = `
+        <div class="producto-info">
+          <div class="producto-nombre">${item.nombre}</div>
+          ${item.descripcion ? `<div class="producto-desc">${item.descripcion}</div>` : ""}
+          <div class="producto-precio">${formatoCOP(item.precio)}</div>
+        </div>
+        <div class="stepper">
+          <button type="button" data-accion="restar" data-id="${item.id}">−</button>
+          <span id="cantidad-${item.id}">0</span>
+          <button type="button" data-accion="sumar" data-id="${item.id}">+</button>
+        </div>
+      `;
+      contenedor.appendChild(div);
+    });
+
+    contenedor.querySelectorAll("button[data-accion]").forEach((boton) => {
+      boton.addEventListener("click", () => {
+        const id = boton.dataset.id;
+        const actual = carrito[id] || 0;
+        carrito[id] = boton.dataset.accion === "sumar" ? actual + 1 : Math.max(0, actual - 1);
+        document.getElementById("cantidad-" + id).textContent = carrito[id];
+        document.getElementById("producto-" + id).classList.toggle("en-carrito", carrito[id] > 0);
+        actualizarResumen();
+      });
+    });
+
+    actualizarResumen();
+    mostrarSeccion("seccion-carrito");
+  }
+
+  function actualizarResumen() {
+    let total = 0;
+    let cantidadTotal = 0;
+    for (const [id, cantidad] of Object.entries(carrito)) {
+      const item = CATALOGO.find((p) => p.id === id);
+      total += item.precio * cantidad;
+      cantidadTotal += cantidad;
+    }
+    document.getElementById("total-carrito").textContent = "Total: " + formatoCOP(total);
+    const btnContinuar = document.getElementById("btn-continuar");
+    btnContinuar.disabled = total === 0;
+    btnContinuar.textContent = cantidadTotal > 0 ? `Continuar (${cantidadTotal} producto${cantidadTotal > 1 ? "s" : ""})` : "Continuar";
+  }
+
+  document.getElementById("btn-ubicacion").addEventListener("click", () => {
+    const boton = document.getElementById("btn-ubicacion");
+    if (!navigator.geolocation) {
+      alert("Tu navegador no soporta ubicación. Elige tu sede de la lista.");
+      return;
+    }
+    const textoOriginal = boton.textContent;
+    boton.textContent = "Buscando tu ubicación...";
+    boton.disabled = true;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        boton.textContent = textoOriginal;
+        boton.disabled = false;
+        seleccionarSede(sedeMasCercana(pos.coords.latitude, pos.coords.longitude));
+      },
+      () => {
+        boton.textContent = textoOriginal;
+        boton.disabled = false;
+        alert("No pudimos obtener tu ubicación. Elige tu sede de la lista.");
+      }
+    );
+  });
+
+  document.getElementById("btn-continuar").addEventListener("click", () => {
+    mostrarSeccion("seccion-checkout");
+  });
+
+  document.getElementById("btn-enviar-whatsapp").addEventListener("click", () => {
+    const nombre = document.getElementById("input-nombre").value.trim();
+    const telefono = document.getElementById("input-telefono").value.trim();
+    const direccion = document.getElementById("input-direccion").value.trim();
+    const pago = document.getElementById("input-pago").value;
+    const observaciones = document.getElementById("input-observaciones").value.trim();
+
+    if (!nombre || !telefono || !direccion) {
+      alert("Por favor completa nombre, teléfono y dirección.");
+      return;
+    }
+
+    let lineas = [`Pedido - Empanadas Conucos (${sedeActual.nombre})`, ""];
+    let total = 0;
+    for (const [id, cantidad] of Object.entries(carrito)) {
+      if (cantidad === 0) continue;
+      const item = CATALOGO.find((p) => p.id === id);
+      total += item.precio * cantidad;
+      lineas.push(`${cantidad}x ${item.nombre} - ${formatoCOP(item.precio * cantidad)}`);
+    }
+    lineas.push("");
+    lineas.push(`Total productos: ${formatoCOP(total)} (no incluye domicilio, el valor te lo confirma un empleado)`);
+    lineas.push("");
+    lineas.push(`Nombre: ${nombre}`);
+    lineas.push(`Teléfono: ${telefono}`);
+    lineas.push(`Dirección: ${direccion}`);
+    lineas.push(`Método de pago: ${pago}`);
+    lineas.push(`Observaciones: ${observaciones || "-"}`);
+
+    const mensaje = encodeURIComponent(lineas.join("\n"));
+    const numero = sedeActual.whatsapp.replace(/[^0-9]/g, "");
+    window.open(`https://wa.me/57${numero}?text=${mensaje}`, "_blank");
+  });
+
+  renderizarListaSedes();
+</script>
+
+</body>
+</html>
